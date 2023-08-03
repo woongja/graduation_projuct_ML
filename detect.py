@@ -17,7 +17,7 @@ root_dir = "/Users/woongjae/Desktop/gradu/project"
 save_pants = f'{root_dir}/runs/detect/save_pants/crops'
 save_top = f'{root_dir}/runs/detect/save_top/crops'
 
-model = YOLO('/Users/woongjae/Desktop/gradu/project/runs/detect/train3/weights/best.pt')
+model = YOLO('/Users/woongjae/Desktop/gradu/project/runs/detect/train4/weights/best.pt')
 source = f'{root_dir}/test1.jpg'
 
 img = cv2.imread(source)
@@ -55,14 +55,15 @@ for result in results_pants:
     for i, box in enumerate(boxes_pants):
         r = box.xyxy[0].astype(int)
         crop = img[r[1]:r[3], r[0]:r[2]]
-        cv2.resize(crop, dsize=(250,320))
         if results_top:
             for c in result.boxes.cls:
+                cv2.resize(crop, dsize=(250,320))
                 cv2.imwrite("save_pants/" + names[int(c)]+ str(i) + ".jpg", crop)
 
 plots_top = results_top[0].plot()
 cv2.imshow("plot", plots_top)
 plots_pants = results_pants[0].plot()
 cv2.imshow("plot", plots_pants)
-cv2.waitKey(0)
+if cv2.waitKey(1)&0xFF == 27: # esc 누르면 닫음
+        break
 cv2.destroyAllWindows()
